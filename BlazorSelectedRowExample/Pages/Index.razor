@@ -1,0 +1,63 @@
+﻿@using BlazorSelectedRowExample.Data
+@page "/"
+
+<h1>Employees</h1>
+
+<div class="row">
+    <div class="col">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var employee in _employees)
+                {
+                    <tr @onclick="() => Select(employee)">
+                        <td>
+                            @employee.LastName, @employee.FirstName
+                        </td>
+                        <td>
+                            @employee.City, @employee.State
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @if (_selectedEmployee != null)
+    {
+        <div class="col">
+            <ul>
+                <li><b>Id</b> - @_selectedEmployee.Id</li>
+                <li><b>First Name</b> - @_selectedEmployee.FirstName</li>
+                <li><b>Last Name</b> - @_selectedEmployee.LastName</li>
+                <li><b>Age</b> - @_selectedEmployee.Age</li>
+                <li><b>Address</b> - @_selectedEmployee.Address</li>
+                <li><b>City</b> - @_selectedEmployee.City</li>
+                <li><b>State</b> - @_selectedEmployee.State</li>
+                <li><b>Zip Code</b> - @_selectedEmployee.ZipCode</li>
+            </ul>
+        </div>
+    }
+</div>
+
+
+@code
+{
+    private Employee[] _employees;
+    private Employee _selectedEmployee;
+    private readonly EmployeeService _employeeService = new EmployeeService();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _employees = await _employeeService.GetEmployeesAsync();
+    }
+
+    private void Select(Employee employee)
+    {
+        _selectedEmployee = employee;
+    }
+}
